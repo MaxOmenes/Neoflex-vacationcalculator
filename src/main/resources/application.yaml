@@ -1,0 +1,13 @@
+spring:
+  application:
+      name: vacationcalculator
+  datasource:
+    url: jdbc:h2:mem:holiday
+    username: sa
+    password: sa
+    name: holiday
+    generate-unique-name: false
+    driverClassName: org.h2.Driver
+  h2:
+    console:
+      enabled: true
