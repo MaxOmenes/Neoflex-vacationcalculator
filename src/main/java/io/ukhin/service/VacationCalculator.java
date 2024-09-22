@@ -6,6 +6,8 @@ import io.ukhin.repository.HolidayRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -13,31 +15,35 @@ import java.util.List;
 @Service
 public class VacationCalculator {
 
-    HolidayRepository holidayRepository;
+    HolidayCollector holidayCollector;
     DataFormaterConfiguration dataFormaterConfiguration;
 
     @Autowired
-    public VacationCalculator(HolidayRepository holidayRepository,
-                                        DataFormaterConfiguration dataFormaterConfiguration) {
-        this.holidayRepository = holidayRepository;
+    public VacationCalculator(HolidayCollector holidayCollector,
+                              DataFormaterConfiguration dataFormaterConfiguration) {
+        this.holidayCollector = holidayCollector;
         this.dataFormaterConfiguration = dataFormaterConfiguration;
     }
 
-    List<Holiday> holidays = (List<Holiday>) holidayRepository.findAll();
-
-    Date startDate = dataFormaterConfiguration.getDataFormatter().parse(start);
-    Date endDate = dataFormaterConfiguration.getDataFormatter().parse(end);
-
-        if (startDate.after(endDate)) {
-        return "Start date should be before end date";
-    }
-
-    Calendar startCal = Calendar.getInstance();
+    public float calculate(Date startDate, Date endDate, float yearSalary) {
+        Calendar startCal = Calendar.getInstance();
         startCal.setTime(startDate);
-    Calendar endCal = Calendar.getInstance();
+        Calendar endCal = Calendar.getInstance();
         endCal.setTime(endDate);
+        List<Holiday> holidays = holidayCollector.collectHolidays(startDate, endDate);
 
-        if (startCal.get(Calendar.YEAR) != endCal.get(Calendar.YEAR)) {
+        List<Date> paidDays = new ArrayList<>();
 
+        while (startCal.before(endCal)) {
+            if (startCal.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY ||
+                    startCal.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY ||
+                    !holidays.contains(new Holiday(startCal.get(Calendar.MONTH), startCal.get(Calendar.DAY_OF_MONTH)))) {
+                paidDays.add(startCal.getTime());
+            }
+            startCal.add(Calendar.DATE, 1);
+        }
+
+        return paidDays.size() * yearSalary / 365;
     }
 }
+

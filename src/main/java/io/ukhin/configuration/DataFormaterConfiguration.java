@@ -10,6 +10,6 @@ import java.util.Locale;
 public class DataFormaterConfiguration {
     @Bean
     public SimpleDateFormat getDataFormatter() {
-        return new SimpleDateFormat("dd-MM", Locale.ENGLISH);
+        return new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
     }
 }

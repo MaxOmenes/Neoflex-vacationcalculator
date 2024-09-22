@@ -5,20 +5,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
-import java.io.Serializable;
-
-@Entity
-@Table(name = "holidays")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-@IdClass(Holiday.class)
-public class Holiday implements Serializable {
-    @Id
+public class Holiday{
     private int month;
-
-    @Id
     private int day;
 }
