@@ -10,6 +10,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Holiday{
-    private int month;
-    private int day;
+    private int holiday_month;
+    private int holiday_day;
 }

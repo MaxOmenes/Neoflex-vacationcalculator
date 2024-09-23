@@ -6,10 +6,7 @@ import io.ukhin.repository.HolidayRepository;
 import io.ukhin.service.VacationCalculator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -34,9 +31,9 @@ public class VacationCalculatorController {
     }
 
     @GetMapping
-    public String calculateVacation(@Param("Year_salary") float yearSalary,
-                                    @Param("Start_date") String start,
-                                    @Param("End_date") String end) {
+    public String calculateVacation(@RequestParam("Year_salary") Float yearSalary,
+                                    @RequestParam("Start_date") String start,
+                                    @RequestParam("End_date") String end) {
         Calendar startCal;
         Calendar endCal;
 
@@ -58,7 +55,6 @@ public class VacationCalculatorController {
         }
 
         return "Vacation cost: " + vacationCalculator.calculate(startCal.getTime(), endCal.getTime(), yearSalary);
-
 
     }
 }

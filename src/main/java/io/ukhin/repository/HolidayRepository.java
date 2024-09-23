@@ -38,18 +38,18 @@ public class HolidayRepository {
         Calendar end = Calendar.getInstance();
         end.setTime(endDate);
 
-        int startDay = start.get(Calendar.DAY_OF_YEAR);
-        int endDay = end.get(Calendar.DAY_OF_YEAR);
+        int startDay = start.get(Calendar.DAY_OF_MONTH);
+        int endDay = end.get(Calendar.DAY_OF_MONTH);
 
-        int startMonth = start.get(Calendar.MONTH);
-        int endMonth = end.get(Calendar.MONTH);
+        int startMonth = start.get(Calendar.MONTH)+1;
+        int endMonth = end.get(Calendar.MONTH)+1;
 
         PreparedStatementCreator psc = connection -> {
             PreparedStatement statement =
-            connection.prepareStatement("SELECT * FROM holidays WHERE month between ?1 AND ?2 AND " +
-                "(CASE WHEN ?1 = ?2 THEN day between ?3 AND ?4 " +
-                "WHEN month = ?1 THEN day >= ?3 " +
-                "WHEN month = ?2 THEN day <= ?4 END)");
+            connection.prepareStatement("SELECT * FROM holidays WHERE holiday_month between ?1 AND ?2 AND " +
+                "(CASE WHEN ?1 = ?2 THEN holiday_day between ?3 AND ?4 " +
+                "WHEN holiday_month = ?1 THEN holiday_day >= ?3 " +
+                "WHEN holiday_month = ?2 THEN holiday_day <= ?4 END)");
 
             statement.setInt(1, startMonth);
             statement.setInt(2, endMonth);

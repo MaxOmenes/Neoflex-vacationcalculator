@@ -27,13 +27,15 @@ public class DataSourceConfiguration {
 
     @Bean
     public JdbcTemplate jdbcTemplate() {
-        return new JdbcTemplate();
+        return new JdbcTemplate(dataSource());
     }
 
     @Bean
     public CommandLineRunner commandLineRunner(JdbcTemplate jdbcTemplate) {
         return args -> {
-            jdbcTemplate.batchUpdate("INSERT INTO holidays (day, month) VALUES (?1, ?2)",
+            jdbcTemplate.execute("CREATE TABLE holidays (holiday_day INT, holiday_month INT)");
+
+            jdbcTemplate.batchUpdate("INSERT INTO holidays (holiday_day, holiday_month) VALUES (?1, ?2)",
                     List.of(new Object[]{1, 1},
                             new Object[]{23, 2},
                             new Object[]{8, 3},
