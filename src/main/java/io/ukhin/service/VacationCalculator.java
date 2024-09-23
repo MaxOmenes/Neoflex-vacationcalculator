@@ -32,18 +32,18 @@ public class VacationCalculator {
         endCal.setTime(endDate);
         List<Holiday> holidays = holidayCollector.collectHolidays(startDate, endDate);
 
+
         List<Date> paidDays = new ArrayList<>();
 
         while (startCal.before(endCal)) {
             if (startCal.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY ||
-                    startCal.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY ||
-                    !holidays.contains(new Holiday(startCal.get(Calendar.MONTH), startCal.get(Calendar.DAY_OF_MONTH)))) {
+                    startCal.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
                 paidDays.add(startCal.getTime());
             }
             startCal.add(Calendar.DATE, 1);
         }
 
-        return paidDays.size() * yearSalary / 365;
+        return (paidDays.size()-holidays.size()) * yearSalary / 365;
     }
 }
 
