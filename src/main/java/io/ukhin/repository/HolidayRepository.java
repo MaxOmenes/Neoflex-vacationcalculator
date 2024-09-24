@@ -46,10 +46,11 @@ public class HolidayRepository {
 
         PreparedStatementCreator psc = connection -> {
             PreparedStatement statement =
-            connection.prepareStatement("SELECT * FROM holidays WHERE holiday_month between ?1 AND ?2 AND " +
-                "(CASE WHEN ?1 = ?2 THEN holiday_day between ?3 AND ?4 " +
-                "WHEN holiday_month = ?1 THEN holiday_day >= ?3 " +
-                "WHEN holiday_month = ?2 THEN holiday_day <= ?4 END)");
+            connection.prepareStatement("SELECT * FROM holidays " +
+                    "WHERE (holiday_month >= ?1 AND holiday_month <= ?2) " +
+                    "OR (holiday_month = ?1 AND holiday_day >= ?3) " +
+                    "OR (holiday_month = ?2 AND holiday_day <= ?4) " +
+                    "OR (?1 = ?2 AND HOLIDAYS.HOLIDAY_MONTH = ?1 AND holiday_day BETWEEN ?3 AND ?4);");
 
             statement.setInt(1, startMonth);
             statement.setInt(2, endMonth);

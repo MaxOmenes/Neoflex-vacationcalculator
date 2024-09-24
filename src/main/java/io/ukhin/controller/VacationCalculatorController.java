@@ -42,8 +42,11 @@ public class VacationCalculatorController {
             startCal.setTime(dataFormatter.parse(start));
             endCal = Calendar.getInstance();
             endCal.setTime(dataFormatter.parse(end));
+
+
+
         } catch (ParseException e) {
-            return "Invalid date format";
+            return "Invalid date format: Should be dd-MM-yyyy";
         }
 
         if (startCal.after(endCal)) {

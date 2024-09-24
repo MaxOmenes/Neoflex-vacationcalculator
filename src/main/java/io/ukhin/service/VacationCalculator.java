@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class VacationCalculator {
@@ -30,20 +31,35 @@ public class VacationCalculator {
         startCal.setTime(startDate);
         Calendar endCal = Calendar.getInstance();
         endCal.setTime(endDate);
+
+        endCal.add(Calendar.DATE, 1);
         List<Holiday> holidays = holidayCollector.collectHolidays(startDate, endDate);
 
 
         List<Date> paidDays = new ArrayList<>();
 
         while (startCal.before(endCal)) {
-            if (startCal.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY ||
+            if (startCal.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY &&
                     startCal.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
                 paidDays.add(startCal.getTime());
             }
             startCal.add(Calendar.DATE, 1);
         }
 
-        return (paidDays.size()-holidays.size()) * yearSalary / 365;
+        Calendar filterCalendar = Calendar.getInstance();
+
+        paidDays = paidDays.stream().filter(day -> {
+            filterCalendar.setTime(day);
+            for (Holiday holiday : holidays) {
+                if (filterCalendar.get(Calendar.DAY_OF_MONTH) == holiday.getHoliday_day() &&
+                        filterCalendar.get(Calendar.MONTH) + 1 == holiday.getHoliday_month()) {
+                    return false;
+                }
+            }
+            return true;
+        }).collect(Collectors.toList());
+
+        return (paidDays.size()) * yearSalary / 365;
     }
 }
 
